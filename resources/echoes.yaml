@@ -1,0 +1,20 @@
+worker: 8
+log_dir: "/tmp/"
+host: "127.0.0.1"
+port: 443
+vhosts:
+  - 
+    max_fails: 3
+    max_timeout: 10 # s
+    enbale_https: false
+    regex: "*" # Do not filt any requests
+    load_balance: "RR"
+    server_name:
+      - "a.icug.net.cn"
+    upstreams:
+      -
+        host: "www.cug.edu.cn"
+        port: 80
+        weight: 1
+        scheme: "http"
+
