@@ -1,5 +1,6 @@
 worker: 8
 log_dir: "/tmp/"
+certs_dir: "/Users/chenlixiang/Downloads/a.icug.net.cn/Nginx/"
 host: "127.0.0.1"
 port: 443
 vhosts:

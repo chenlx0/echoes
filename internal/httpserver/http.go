@@ -12,10 +12,10 @@ import (
 	"github.com/chenlx0/echoes/internal/ssl"
 )
 
-func newTLSConfig() *tls.Config {
+func newTLSConfig(certsDir string) *tls.Config {
 	// Initialize certificates
 	domains := []string{"a.icug.net.cn"}
-	certs, err := ssl.GetAllCertificates(domains, "/Users/chenlixiang/Downloads/a.icug.net.cn/Nginx/")
+	certs, err := ssl.GetAllCertificates(domains, certsDir)
 	if err != nil {
 		panic(err)
 	}
@@ -30,7 +30,7 @@ func newTLSConfig() *tls.Config {
 // Run config initialization and echoes http server
 func Run(conf *config.GlobalConfig) {
 	// init tls config and start listening
-	tlsConfig := newTLSConfig()
+	tlsConfig := newTLSConfig(conf.CertsDir)
 	ln, err := tls.Listen("tcp", ":443", tlsConfig)
 	if err != nil {
 		lg.LogFatal("init tls config: ", err)

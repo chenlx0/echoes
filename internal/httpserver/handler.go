@@ -118,6 +118,7 @@ func (e EchoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			e.Logf(lg.ERROR, "Rewrite Phase: ", err)
 			e.Abort(500, "Internal Server Error")
+			return
 		}
 	}
 	e.exec()
@@ -129,6 +130,7 @@ func (e EchoHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			e.Logf(lg.ERROR, "Response Filter: ", err)
 			e.Abort(500, "Internal Server Error")
+			return
 		}
 	}
 
@@ -223,16 +225,25 @@ func modifyHeaders(headers http.Header) {
 		if hv == "" {
 			continue
 		}
-		headers.Del(hv)
+		headers.Del(h)
 	}
 
 	// Add addtional heders
 	for k, h := range additionHeaders {
-		headers.Set(k, h)
+		if headers.Get(k) != "" {
+			headers.Set(k, h)
+		} else {
+			headers.Add(k, h)
+		}
 	}
 
 	// After stripping hop-by-hop headers, add back neccesary headers
 	// for protocol upgrades, such as websockets
+	reqUpType := upgradeType(headers)
+	if reqUpType != "" {
+		headers.Set("Connection", "Upgrade")
+		headers.Set("Upgrade", reqUpType)
+	}
 }
 
 func upgradeType(h http.Header) string {

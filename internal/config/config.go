@@ -28,9 +28,10 @@ type VHost struct {
 
 // GlobalConfig echoes server global config
 type GlobalConfig struct {
-	Worker int     `yaml:"worker"`
-	LogDir string  `yaml:"log_dir"`
-	VHosts []VHost `yaml:"vhosts"`
+	Worker   int     `yaml:"worker"`
+	LogDir   string  `yaml:"log_dir"`
+	CertsDir string  `yaml:"certs_dir"`
+	VHosts   []VHost `yaml:"vhosts"`
 }
 
 // ReadConfig initialize config from specify path
